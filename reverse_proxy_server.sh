@@ -512,9 +512,9 @@ dns_adguard_home() {
 
     sleep 1
     sed -i \
-    -e "s|username|${USERNAME}|g" \
-    -e "s|hash|${HASH}|g" \
-    AdGuardHome/AdGuardHome.yaml
+      -e "s|username|${USERNAME}|g" \
+      -e "s|hash|${HASH}|g" \
+      AdGuardHome/AdGuardHome.yaml
 
     AdGuardHome/AdGuardHome -s restart
 }
@@ -664,18 +664,8 @@ issuance_of_certificates() {
     done
 
     { crontab -l; echo "0 5 1 */2 * certbot -q renew"; } | crontab -
+    echo "renew_hook = systemctl reload nginx" >> /etc/letsencrypt/renewal/${DOMAIN}.conf
 
-    nginx_or_haproxy=1
-    if [[ "${nginx_or_haproxy}" == "1" ]]; then
-        echo "renew_hook = systemctl reload nginx" >> /etc/letsencrypt/renewal/${DOMAIN}.conf
-        echo ""
-        openssl dhparam -out /etc/nginx/dhparam.pem 2048
-    else
-        echo "renew_hook = cat /etc/letsencrypt/live/${DOMAIN}/fullchain.pem /etc/letsencrypt/live/${DOMAIN}/privkey.pem > /etc/haproxy/certs/${DOMAIN}.pem && systemctl restart haproxy" >> /etc/letsencrypt/renewal/${DOMAIN}.conf
-        echo ""
-        openssl dhparam -out /etc/haproxy/dhparam.pem 2048
-    fi
-    
     tilda "$(text 10)"
 }
 
@@ -684,6 +674,7 @@ nginx_setup() {
     info " $(text 45) "
     mkdir -p /etc/nginx/stream-enabled/
     mkdir -p /etc/nginx/locations/
+    openssl dhparam -out /etc/nginx/dhparam.pem 2048
     rm -rf /etc/nginx/conf.d/default.conf
     touch /etc/nginx/.htpasswd
 
@@ -778,7 +769,7 @@ EOF
 local_conf() {
     cat > /etc/nginx/conf.d/local.conf <<EOF
 server {
-    listen 9090 default_server;
+    listen 127.0.0.1:9090 default_server;
     server_name _;
     location / {
         return 301  https://${DOMAIN}\$request_uri;
@@ -786,11 +777,11 @@ server {
 }
 # Main
 server {
-    listen                      36076 ssl proxy_protocol;
+    listen                      127.0.0.1:36076 ssl proxy_protocol;
     ssl_reject_handshake        on;
 }
 server {
-    listen                      36077 ssl proxy_protocol;
+    listen                      127.0.0.1:36077 ssl proxy_protocol;
     http2                       on;
     server_name                 ${DOMAIN} www.${DOMAIN};
 
@@ -835,8 +826,8 @@ server {
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
     }
-    # Adguard home
-    include /etc/nginx/locations/adguard.conf;
+    # Enable locations
+    include /etc/nginx/locations/*.conf;
 }
 EOF
 }
