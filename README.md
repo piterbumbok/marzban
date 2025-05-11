@@ -75,12 +75,12 @@ SERVER 2
 
 To begin configuring the server, simply run the following command in a terminal:
 ```sh
-bash <(curl -Ls https://github.com/cortez24rus/marz-reverse-proxy/raw/refs/heads/main/reverse_proxy_server.sh)
+bash <(curl -Ls https://github.com/piterbumbok/marzban/raw/refs/heads/main/reverse_proxy_server.sh)
 ```
 
 ### Selecting and installing a random template for the website:
 ```sh
-bash <(curl -Ls https://raw.githubusercontent.com/cortez24rus/marz-reverse-proxy/refs/heads/main/reverse_proxy_random_site.sh)
+bash <(curl -Ls https://raw.githubusercontent.com/piterbumbok/marzban/refs/heads/main/reverse_proxy_server.sh)
 ```
 
 The script will then prompt you for the necessary configuration information:
