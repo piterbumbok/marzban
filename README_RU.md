@@ -75,13 +75,13 @@
 
 Для начала настройки сервера выполните следующую команду в терминале:
 ```sh
-bash <(curl -Ls https://github.com/cortez24rus/marz-reverse-proxy/raw/refs/heads/main/reverse_proxy_server.sh)
+bash <(curl -Ls https://github.com/piterbumbok/marzban/raw/refs/heads/main/reverse_proxy_server.sh)
 ```
 
 
 ### Выбор и установка случайного шаблона для веб-сайта:
 ```sh
-bash <(curl -Ls https://github.com/cortez24rus/marz-reverse-proxy/raw/refs/heads/main/reverse_proxy_random_site.sh)
+bash <(curl -Ls https://github.com/piterbumbok/marzban/raw/refs/heads/main/reverse_proxy_random_site.sh)
 ```
 
 Скрипт запросит у вас необходимую конфигурационную информацию:
